@@ -1,0 +1,136 @@
+{
+  "profile": {
+    "name": "Girish Garg",
+    "role": "Full-stack developer",
+    "tagline": "I build full-stack web apps end to end, from React frontends to Node backends. Final-year IT student at MBM University, looking for internship and new-grad work.",
+    "location": "Jodhpur, India",
+    "email": "garggirish2020@gmail.com",
+    "resumeUrl": "/resume.pdf",
+    "socials": [
+      { "label": "GitHub", "href": "REPLACE - your GitHub profile URL" },
+      { "label": "LinkedIn", "href": "https://linkedin.com/in/girish-garg" }
+    ]
+  },
+
+  "chat": {
+    "placeholder": "Ask me anything about my work",
+    "suggestions": [
+      "What's your strongest project?",
+      "Have you contributed to open source?",
+      "Are you available for internships?"
+    ]
+  },
+
+  "bio": "I'm a final-year IT student at MBM University, Jodhpur, who likes building things end to end - from React and Next.js frontends to Node backends. I'm drawn to the lower-level side too: I rebuilt Git's core plumbing from scratch and contributed numerical APIs to stdlib in both JavaScript and C. Right now I'm looking for internship and new-grad roles where I can ship real full-stack work.",
+
+  "skills": [
+    { "group": "Languages", "items": ["JavaScript", "Python", "C", "C++", "Java", "SQL"] },
+    { "group": "Frontend", "items": ["React", "Next.js", "Jetpack Compose", "Tailwind CSS"] },
+    { "group": "Backend", "items": ["Node.js", "MongoDB", "MySQL", "SQLite"] },
+    { "group": "Tools", "items": ["Git", "Linux", "Docker", "Postman", "Figma"] }
+  ],
+
+  "projects": [
+    {
+      "slug": "animy",
+      "title": "ANIMY",
+      "blurb": "A prompt-driven video generator: describe a scene, get a rendered video.",
+      "stack": ["React", "Node.js", "Python", "GenAI", "MongoDB"],
+      "what": "A web platform that turns a text prompt into a rendered video. It is split into three services: a React frontend, an API backend, and a separate render backend that does the heavy lifting.",
+      "why": "I wanted to build a real generative-AI product end to end, not just a demo. That meant dealing with long-running render jobs and keeping the interface responsive while they run.",
+      "how": "The render backend processes jobs across four parallel threads, which pushed throughput to roughly ten videos per hour. I evaluated two real-time update strategies for streaming progress to the client and dropped WebSockets after weighing the architectural cost against a simpler approach.",
+      "result": "A working three-service pipeline with measurably higher render throughput, and a sharper instinct for when added complexity is not worth it.",
+      "liveUrl": "https://app.animy.tech/",
+      "repoUrl": "https://github.com/Girish-Garg/animy",
+      "featured": true,
+      "caseStudy": true,
+      "year": "2025"
+    },
+    {
+      "slug": "maap",
+      "title": "Maap",
+      "blurb": "A wood-measurement PWA modernising quotation workflow with one-tap PDF bills",
+      "what": "A progressive web app for a local wood supplier to manage their quotations and billing. It features a React frontend with PDF generation, a Node.js backend, and Supabase for data storage and Auth.",
+      "why": "The supplier's existing workflow was manual and error-prone, relying on paper records and separate tools for calculations and billing. I built Maap to streamline their operations into a single, easy-to-use platform.",
+      "how": "I designed a user-friendly interface for quick data entry and implemented real-time calculations for accurate quotations. The PDF generation feature allows the supplier to create professional bills with a single click, improving efficiency and reducing errors.",
+      "result": "Maap has significantly improved the supplier's workflow, reducing errors and saving time. The supplier can now manage their quotations and billing in one place, leading to better organization and increased customer satisfaction.",
+      "stack": ["NextJS", "TypeScript", "Supabase", "React-pdf"],
+      "liveUrl": "https://maap.grgs.app/",
+      "repoUrl": "https://github.com/Girish-Garg/Maap",
+      "featured": true,
+      "caseStudy": false,
+      "year": "2026"
+    },
+    {
+      "slug": "build-my-own-git",
+      "title": "Build My Own Git",
+      "blurb": "A minimal Git reimplemented from scratch in Node.js.",
+      "stack": ["Node.js"],
+      "what": "A from-scratch implementation of Git's core plumbing in Node.js - the commands that actually move data, not the porcelain on top.",
+      "why": "I wanted to understand how Git really works under the hood instead of treating it as magic, so I rebuilt the parts that matter.",
+      "how": "I implemented six core commands (init, hash-object, write-tree, commit-tree, ls-tree, cat-file), recreated the .git directory layout, and modeled the three object types - blob, tree, and commit - with persistent storage. Content addressing uses SHA-1 hashing, mirroring native Git behavior.",
+      "result": "A working Git clone that can initialise a repo, hash and store objects, and build trees and commits the way real Git does - and a much deeper mental model of version control.",
+      "repoUrl": "https://github.com/Girish-Garg/My_Git",
+      "featured": true,
+      "caseStudy": false,
+      "year": "2024"
+    },
+    {
+      "slug": "wall-calendar",
+      "title": "Wall Calendar",
+      "blurb": "A responsive calendar component inspired by a physical wall calendar with interactive date selection and note-taking capabilities.",
+      "stack": ["React", "Vite", "Tailwind CSS"],
+      "what": "A frontend-only calendar application built with React that combines clean UI with meaningful interactions like date range selection, note management, and holiday tracking - all data persisted in localStorage.",
+      "why": "To create a practical, responsive calendar experience that mimics the simplicity and functionality of a physical wall calendar while providing digital conveniences like notes, memos, and holiday markers.",
+      "how": "Built with React 19 for component-based architecture, Vite 8 for fast development and builds, and Tailwind CSS 4 for responsive styling. The application uses React state for predictable state management, localStorage for persistent data storage (notes, monthly memos, and holidays), and CSS-driven UI with subtle layering effects and responsive design.",
+      "result": "A fully functional, user-friendly calendar application with auto-saving notes, clear holiday indicators, responsive layout across devices, and a live demo deployed on Vercel - demonstrating practical frontend-only application development.",
+      "repoUrl": "https://github.com/Girish-Garg/wall-calendar",
+      "featured": false,
+      "caseStudy": false,
+      "year": "2026"
+    },
+    {
+      "slug": "kaahatabook",
+      "title": "Kaahatabook",
+      "blurb": "A comprehensive digital accounting and bookkeeping application built with Node.js.",
+      "stack": ["Node.js", "EJS", "JavaScript"],
+      "what": "A full-stack web application for managing accounting records and bookkeeping operations with an intuitive user interface and robust backend.",
+      "why": "To create a modern, accessible solution for small businesses and individuals to manage their financial records and accounting needs efficiently.",
+      "how": "Built using Node.js for the backend, EJS for templating (73.7% of the codebase), and JavaScript for interactive frontend functionality (26.3%). The application provides features for recording transactions, generating reports, and maintaining organized financial documentation.",
+      "result": "A fully functional accounting platform that enables users to manage their financial records with ease, providing a clean interface for bookkeeping tasks and financial tracking.",
+      "repoUrl": "https://github.com/Girish-Garg/Kaahatabook-2.0",
+      "featured": false,
+      "caseStudy": false,
+      "year": "2025"
+    }
+  ],
+
+  "faq": [],
+
+  "sections": [
+    { "type": "featured-work", "id": "work", "navLabel": "Work", "heading": "Selected work" },
+    { "type": "more-projects", "id": "more", "heading": "More on GitHub" },
+    { "type": "about", "id": "about", "navLabel": "About", "heading": "About" },
+    {
+      "type": "collection",
+      "id": "experience",
+      "navLabel": "Experience",
+      "heading": "Experience",
+      "items": [
+        {
+          "title": "stdlib - Open-source Contributor",
+          "meta": "2024",
+          "blurb": "Over ten accepted contributions to stdlib's numerical core, designing new APIs and NaN-resilient wrappers in JavaScript and C.",
+          "href": ""
+        },
+        {
+          "title": "DevX - Club Co-Lead",
+          "meta": "2023 - 2024",
+          "blurb": "Led guided learning paths for 50+ students and organised a session with a three-time Kaggle Grandmaster.",
+          "href": ""
+        }
+      ]
+    },
+    { "type": "contact", "id": "contact", "heading": "Contact" }
+  ]
+}

@@ -1,26 +1,386 @@
 @import "tailwindcss";
 
+/* Class-based dark mode: `dark:` utilities apply under a .dark ancestor. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------ *
+ * Design tokens
+ * Two themes, defined at parity. Dark is the default load (set on <html>
+ * before paint). One accent only - cobalt - lightened on dark for contrast.
+ * ------------------------------------------------------------------ */
+
+/* Light (paper). */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  --base: #f6f4ee;
+  --surface: #ffffff;
+  --surface-2: #efece4;
+  --ink: #15150f;
+  --muted: #6b6b60;
+  --faint: #9a9a8e;
+  --line: #e1ddd3;
+  --hairline: rgba(21, 21, 15, 0.08);
+  --accent: #1f46ff;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(31, 70, 255, 0.08);
+  --grid: rgba(21, 21, 15, 0.045);
+  --ok: #15803d;
+}
+
+/* Dark (default). */
+.dark {
+  color-scheme: dark;
+
+  --base: #0a0a0b;
+  --surface: #131316;
+  --surface-2: #1a1a1f;
+  --ink: #ededec;
+  --muted: #8a8a86;
+  --faint: #56565a;
+  --line: #242428;
+  --hairline: rgba(237, 237, 236, 0.10);
+  --accent: #5b7cff;
+  --accent-ink: #0a0a0b;
+  --accent-soft: rgba(91, 124, 255, 0.16);
+  --grid: rgba(237, 237, 236, 0.038);
+  --ok: #34d399;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-base: var(--base);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-ok: var(--ok);
+
+  --font-display: var(--font-hanken);
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ------------------------------------------------------------------ *
+ * Base + the engineered micro-rules
+ * Most of the "this feels engineered" comes from these defaults, not from
+ * any single visual flourish.
+ * ------------------------------------------------------------------ */
+
+html {
+  scroll-behavior: smooth;
+  /* Reserve the scrollbar track so layout never shifts when it appears. */
+  scrollbar-gutter: stable;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.55;
+  letter-spacing: -0.012em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  accent-color: var(--accent);
+}
+
+/* Headings: balance the rag, tighten as they grow. */
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+
+/* Tabular figures wherever numbers are meant to be read or compared. */
+.font-mono,
+code,
+kbd,
+time,
+[data-tnum] {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Anchored sections clear the sticky nav. */
+section[id],
+[data-anchor] {
+  scroll-margin-top: 5.5rem;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+  text-shadow: none;
+}
+
+/* Single, consistent keyboard-focus ring. Pointer interaction stays clean. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+kbd {
+  font-family: var(--font-mono);
+  font-size: 0.8125em;
+  font-weight: 500;
+  padding: 1px 6px;
+  color: var(--ink);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  box-shadow: 0 1px 0 var(--line);
+}
+
+/* ------------------------------------------------------------------ *
+ * Blueprint utilities
+ * Restrained instrument-panel signals: a faint drafting grid, a localized
+ * accent aura, a status pill, a blinking console caret, a hairline rule.
+ * ------------------------------------------------------------------ */
+
+/* Faint drafting grid, masked so it dissolves toward the edges. */
+.blueprint-grid {
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(
+    115% 90% at 18% 0%,
+    #000 0%,
+    transparent 72%
+  );
+  mask-image: radial-gradient(115% 90% at 18% 0%, #000 0%, transparent 72%);
+}
+
+/* Localized cobalt glow for the hero. A bright source behind the console
+   (right) and a softer one behind the name (left), plus a faint neutral
+   lift up top. Tuned brighter on dark so the plate reads lit, not pale. */
+.aura {
+  background:
+    radial-gradient(42% 48% at 82% 44%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 70%),
+    radial-gradient(50% 52% at 6% 2%, var(--accent-soft), transparent 72%),
+    radial-gradient(92% 66% at 50% -18%, var(--hairline), transparent 72%);
+}
+.dark .aura {
+  background:
+    radial-gradient(46% 52% at 82% 44%, color-mix(in srgb, var(--accent) 38%, transparent), transparent 68%),
+    radial-gradient(54% 54% at 4% 0%, color-mix(in srgb, var(--accent) 24%, transparent), transparent 72%),
+    radial-gradient(96% 68% at 50% -18%, var(--hairline), transparent 72%);
+}
+
+/* Accent-lit elevation for the console: layered shadow (ambient + direct)
+   with a cobalt cast, so the terminal reads as the lit centerpiece. */
+.glow-accent {
+  box-shadow:
+    0 0 0 1px var(--hairline),
+    0 2px 4px rgba(0, 0, 0, 0.25),
+    0 30px 80px -30px color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+/* Film grain: a fixed, barely-there noise plate that gives the flat fields
+   depth. Tuned low - it should read as texture, never as snow. */
+.grain {
+  background-image: url("/noise.svg");
+  background-size: 140px 140px;
+  opacity: 0.035;
+}
+.dark .grain {
+  opacity: 0.06;
+}
+
+/* Status pill - uppercase mono, borders take currentColor. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+/* Small live dot used inside pills / console headers. */
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 0 0 currentColor;
+}
+.dot-live {
+  animation: pulse-ring 2.4s ease-out infinite;
+}
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 60%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 5px transparent;
+  }
+}
+
+/* Terminal caret. */
+.caret {
+  display: inline-block;
+  width: 0.5ch;
+  height: 1.05em;
+  vertical-align: -0.16em;
+  background: var(--accent);
+  animation: blink 1.15s steps(1, end) infinite;
+}
+@keyframes blink {
+  0%,
+  48% {
+    opacity: 1;
+  }
+  49%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* A scaled terminal cursor for the hero title - sized in em so it tracks the
+   display size, and blinks like a live prompt. */
+.title-caret {
+  display: inline-block;
+  width: 0.07em;
+  height: 0.82em;
+  margin-left: 0.08em;
+  vertical-align: -0.02em;
+  background: var(--accent);
+  box-shadow: 0 0 0.5em color-mix(in srgb, var(--accent) 60%, transparent);
+  animation: blink 1.15s steps(1, end) infinite;
+}
+
+/* Glowing cobalt command prompt for the console input. */
+.term-prompt {
+  color: var(--accent);
+  text-shadow: 0 0 0.6em color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+/* The console input is a bare command line, not a form field. The blinking
+   caret and the lit prompt are the focus signal, so suppress the global
+   :focus-visible ring that would otherwise box the input. ID selector beats
+   the unlayered :focus-visible rule on specificity. */
+.term-input:focus,
+.term-input:focus-visible {
+  outline: none;
+}
+
+/* Thin custom scrollbar for inner scroll regions (the chat log). */
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+.scroll-thin::-webkit-scrollbar {
+  width: 8px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.scroll-thin::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+  background-clip: content-box;
+}
+
+/* ------------------------------------------------------------------ *
+ * Motion
+ * Scroll-reveal settles once. Scroll-progress bar is a progressive
+ * enhancement (only animates where scroll-timeline is supported).
+ * ------------------------------------------------------------------ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.62s cubic-bezier(0.22, 0.68, 0.18, 1),
+    transform 0.62s cubic-bezier(0.22, 0.68, 0.18, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hero load-in: one orchestrated entrance on first paint. Each block sets its
+   own animation-delay inline for the stagger. `both` keeps content hidden
+   through the delay, then settles - no layout shift (opacity + transform). */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.hero-rise {
+  animation: hero-rise 0.72s cubic-bezier(0.22, 0.68, 0.18, 1) both;
+  will-change: opacity, transform;
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    transform-origin: 0 50%;
+    animation: scaleX linear;
+    animation-timeline: scroll(root);
+  }
+  @keyframes scaleX {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Theme switch: clip-path circle reveal (driven from theme-toggle.tsx).
+ * Disable the default cross-fade so the expanding circle reads cleanly.
+ * ------------------------------------------------------------------ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 2147483646;
+}
+
+/* ------------------------------------------------------------------ *
+ * Reduced motion - last, so it overrides everything above.
+ * ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal,
+  .hero-rise {
+    opacity: 1;
+    transform: none;
+  }
 }
