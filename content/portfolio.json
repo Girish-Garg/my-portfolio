@@ -44,7 +44,8 @@
       "repoUrl": "https://github.com/Girish-Garg/animy",
       "featured": true,
       "caseStudy": true,
-      "year": "2025"
+      "year": "2025",
+      "tags": ["systems", "genai"]
     },
     {
       "slug": "maap",
@@ -73,7 +74,8 @@
       "repoUrl": "https://github.com/Girish-Garg/My_Git",
       "featured": true,
       "caseStudy": false,
-      "year": "2024"
+      "year": "2024",
+      "tags": ["systems"]
     },
     {
       "slug": "wall-calendar",

@@ -45,6 +45,7 @@ export type Project = {
   featured: boolean;
   caseStudy?: boolean;
   year?: string;
+  tags?: string[];
 };
 
 export type FaqItem = { q: string; a: string };

@@ -43,6 +43,7 @@ AGENTS.md
 architecture.md
 design.md
 target.md
+docs/
 
 .claude/
 .cursor/

@@ -1,5 +1,5 @@
 import { profile } from "@/content/portfolio";
-import { ChatPanel } from "./chat-panel";
+import { Terminal } from "./terminal/terminal";
 
 export function Hero() {
   return (
@@ -82,7 +82,7 @@ export function Hero() {
             <p className="mb-3 font-mono text-xs uppercase tracking-[0.18em] text-faint">
               Ask my portfolio
             </p>
-            <ChatPanel />
+            <Terminal />
           </div>
         </div>
       </div>

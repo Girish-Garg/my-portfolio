@@ -296,6 +296,12 @@ kbd {
   opacity: 0;
 }
 
+/* Terminal fullscreen overlay: a short fade-and-rise in. Reduced-motion users
+   get an instant swap via the global reduced-motion block below. */
+.term-overlay-enter {
+  animation: hero-rise 0.28s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
 /* ------------------------------------------------------------------ *
  * Motion
  * Scroll-reveal settles once. Scroll-progress bar is a progressive
