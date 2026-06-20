@@ -160,7 +160,6 @@ export function ChatPanel() {
           <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
             <span aria-hidden className="dot dot-live text-ok" />
             <span>{HANDLE}</span>
-            <span aria-hidden className="text-faint">tty/1</span>
           </div>
           <div className="font-mono text-[10px] uppercase tracking-[0.14em]">
             {streaming ? (

@@ -16,7 +16,7 @@ export function SiteNav() {
             aria-hidden
             className="size-2 rounded-[2px] bg-accent transition-transform duration-200 group-hover:rotate-45"
           />
-          {profile.name}
+          GRGS
         </Link>
 
         <div className="flex items-center gap-6">

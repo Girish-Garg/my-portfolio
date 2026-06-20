@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Hanken_Grotesk, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { profile } from "@/content/portfolio";
+import { BottomFade } from "@/components/bottom-fade";
 import "./globals.css";
 
 // Display / UI - variable font, no weights needed.
@@ -88,6 +89,9 @@ export default function RootLayout({
         </div>
 
         {children}
+
+        {/* Bottom fade scrim - softens the lower edge mid-scroll, clears at the end. */}
+        <BottomFade />
       </body>
     </html>
   );

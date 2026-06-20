@@ -26,9 +26,6 @@ export function Hero() {
               <span className="text-faint">{profile.location}</span>
             </>
           )}
-          <span aria-hidden className="ml-auto hidden text-faint tabular-nums sm:inline">
-            26.24&deg;N 73.02&deg;E
-          </span>
         </div>
 
         {/* The name owns the page - full bleed, with a live cobalt cursor. */}
@@ -37,7 +34,6 @@ export function Hero() {
           style={{ animationDelay: "0.14s" }}
         >
           {profile.name}
-          <span aria-hidden className="title-caret" />
         </h1>
 
         {/* Below the name: the pitch on the left, the live console on the right. */}
@@ -84,7 +80,7 @@ export function Hero() {
             style={{ animationDelay: "0.36s" }}
           >
             <p className="mb-3 font-mono text-xs uppercase tracking-[0.18em] text-faint">
-              <span className="text-accent">FIG 0.1</span> / Ask my portfolio
+              Ask my portfolio
             </p>
             <ChatPanel />
           </div>

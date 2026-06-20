@@ -247,19 +247,6 @@ kbd {
   }
 }
 
-/* A scaled terminal cursor for the hero title - sized in em so it tracks the
-   display size, and blinks like a live prompt. */
-.title-caret {
-  display: inline-block;
-  width: 0.07em;
-  height: 0.82em;
-  margin-left: 0.08em;
-  vertical-align: -0.02em;
-  background: var(--accent);
-  box-shadow: 0 0 0.5em color-mix(in srgb, var(--accent) 60%, transparent);
-  animation: blink 1.15s steps(1, end) infinite;
-}
-
 /* Glowing cobalt command prompt for the console input. */
 .term-prompt {
   color: var(--accent);
@@ -292,6 +279,21 @@ kbd {
 .scroll-thin::-webkit-scrollbar-thumb:hover {
   background: var(--muted);
   background-clip: content-box;
+}
+
+/* Bottom fade: a translucent scrim pinned to the foot of the viewport. It
+   softens the lower edge while there is more to scroll, then clears entirely at
+   the end of the page (the `data-at-end` flag is driven by bottom-fade.tsx). */
+.bottom-fade {
+  background: linear-gradient(
+    to top,
+    var(--base) 0%,
+    color-mix(in srgb, var(--base) 58%, transparent) 48%,
+    transparent 100%
+  );
+}
+.bottom-fade[data-at-end] {
+  opacity: 0;
 }
 
 /* ------------------------------------------------------------------ *

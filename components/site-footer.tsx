@@ -23,7 +23,6 @@ export function SiteFooter() {
         </div>
 
         <div className="flex items-center gap-5">
-          <span>Built with Next.js + Tailwind</span>
           <a
             href="#main"
             className="group inline-flex items-center gap-1.5 text-muted transition-colors hover:text-ink"
