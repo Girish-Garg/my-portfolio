@@ -1,18 +1,21 @@
+import "server-only";
+import { createClient } from "redis";
+
 /**
  * Per-IP fixed-window rate limiting to protect the shared Gemini free-tier quota.
  *
- * Uses Upstash Redis over its REST API when UPSTASH_REDIS_REST_URL and
- * UPSTASH_REDIS_REST_TOKEN are set (the production path - works across stateless
- * serverless invocations). Without them it falls back to an in-memory counter,
+ * Uses the shared Redis 7 instance when REDIS_HOST, REDIS_PORT, and
+ * REDIS_PASSWORD are set. Without them it falls back to an in-memory counter,
  * which is fine for local dev but only counts within a single running process.
  */
 
 const MINUTE_LIMIT = Number(process.env.CHAT_RATE_PER_MINUTE ?? 8);
 const DAY_LIMIT = Number(process.env.CHAT_RATE_PER_DAY ?? 40);
 
-const REST_URL = process.env.UPSTASH_REDIS_REST_URL;
-const REST_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
-const useRedis = Boolean(REST_URL && REST_TOKEN);
+const REDIS_HOST = process.env.REDIS_HOST;
+const REDIS_PORT = Number(process.env.REDIS_PORT ?? 6379);
+const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
+const useRedis = Boolean(REDIS_HOST && REDIS_PASSWORD && Number.isInteger(REDIS_PORT));
 
 export type RateLimitResult = { ok: true } | { ok: false; retryAfter: number };
 
@@ -38,29 +41,59 @@ function memoryHit(key: string, seconds: number, limit: number): boolean {
   return entry.count > limit;
 }
 
-// --- Upstash REST -----------------------------------------------------------
+// --- Redis ------------------------------------------------------------------
+
+type RedisClient = ReturnType<typeof createClient>;
+
+const redisState = globalThis as typeof globalThis & {
+  chatRateLimitRedis?: RedisClient;
+  chatRateLimitRedisConnection?: Promise<RedisClient>;
+};
+
+function getRedis(): Promise<RedisClient> {
+  if (redisState.chatRateLimitRedis?.isReady) {
+    return Promise.resolve(redisState.chatRateLimitRedis);
+  }
+
+  if (!redisState.chatRateLimitRedis) {
+    const client = createClient({
+      socket: {
+        host: REDIS_HOST,
+        port: REDIS_PORT,
+      },
+      password: REDIS_PASSWORD,
+    });
+    client.on("error", () => {
+      if (!client.isReady) redisState.chatRateLimitRedisConnection = undefined;
+    });
+    redisState.chatRateLimitRedis = client;
+  }
+
+  if (!redisState.chatRateLimitRedisConnection) {
+    redisState.chatRateLimitRedisConnection = redisState.chatRateLimitRedis
+      .connect()
+      .then(() => redisState.chatRateLimitRedis!)
+      .catch((error) => {
+        redisState.chatRateLimitRedisConnection = undefined;
+        throw error;
+      });
+  }
+
+  return redisState.chatRateLimitRedisConnection;
+}
 
 async function redisHit(
   key: string,
   seconds: number,
   limit: number,
 ): Promise<boolean> {
-  // INCR then set an expiry only on first write (NX) so the window is fixed.
-  const res = await fetch(`${REST_URL}/pipeline`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${REST_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify([
-      ["INCR", key],
-      ["EXPIRE", key, String(seconds), "NX"],
-    ]),
-    cache: "no-store",
-  });
-  if (!res.ok) throw new Error(`Upstash error ${res.status}`);
-  const data = (await res.json()) as { result: number }[];
-  const count = Number(data?.[0]?.result ?? 0);
+  const client = await getRedis();
+  const results = await client
+    .multi()
+    .incr(key)
+    .expire(key, seconds, "NX")
+    .exec();
+  const count = Number(results[0] ?? 0);
   return count > limit;
 }
 
@@ -71,7 +104,7 @@ export async function checkRateLimit(ip: string): Promise<RateLimitResult> {
 
   for (const w of WINDOWS) {
     const bucket = Math.floor(Date.now() / (w.seconds * 1000));
-    const key = `chat:rl:${w.label}:${id}:${bucket}`;
+    const key = `my-portfolio:chat:rl:${w.label}:${id}:${bucket}`;
     try {
       const over = useRedis
         ? await redisHit(key, w.seconds, w.limit)

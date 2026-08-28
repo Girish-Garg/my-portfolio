@@ -1,0 +1,18 @@
+services:
+  my-portfolio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: my-portfolio
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:3000:3000"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    external: true
+    name: app-network
